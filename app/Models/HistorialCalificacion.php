@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class HistorialCalificacion extends Model
 {
-    //
+    protected $table = 'historial_calificaciones';
 }

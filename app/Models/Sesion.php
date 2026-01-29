@@ -8,15 +8,6 @@ class Sesion extends Model
 {
     protected $table = 'sesiones';
 
-    protected $fillable = [
-        'psicologo_id',
-        'paciente_id',
-        'fecha',
-        'hora',
-        'tipo_sesion',
-        'observaciones',
-    ];
-
     public function psicologo()
     {
         return $this->belongsTo(Psicologo::class);
