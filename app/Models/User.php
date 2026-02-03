@@ -46,4 +46,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function psicologo()
+    {
+        return $this->hasOne(Psicologo::class);
+    }
+
+    public function paciente()
+    {
+        return $this->hasOne(Paciente::class);
+    }
 }
