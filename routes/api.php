@@ -7,6 +7,7 @@ use App\Http\Controllers\ProgresoActividadController;
 use App\Http\Controllers\PsicologoController;
 use App\Http\Controllers\RespuestaTestController;
 use App\Http\Controllers\SesionController;
+use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +26,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/respuestas-test', [RespuestaTestController::class]);
     Route::post('/progreso-actividad', [ProgresoActividadController::class]);
 
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    // PSS/Test endpoints protegidos (requieren autenticación)
+    Route::get('/tests/{test}/preguntas', [TestController::class, 'preguntas']);
+    Route::post('/tests/{test}/resultado', [TestController::class, 'resultado']);
 });
 
 // Autenticacion
 Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
