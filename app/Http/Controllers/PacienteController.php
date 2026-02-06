@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PacienteCollection;
 use App\Models\Paciente;
+use App\Models\Sesion;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -17,11 +18,24 @@ class PacienteController extends Controller
         if ($request->input('role') === 'psicologo') {
             $user = auth()->user();
             $psicologo = $user->psicologo;
+            $totalSesionesProximas = Sesion::whereHas('paciente', function ($q) use ($psicologo) {
+                $q->where('psicologo_id', $psicologo->id);
+            })
+                ->where('fecha', '>', now())
+                ->count();
+
             $pacientes = $psicologo->pacientes()
-                ->with('user')
+                ->with([
+                    'user',
+                    'ultimaSesion',
+                    'progresoActividad',
+                ])
                 ->get();
 
-            return new PacienteCollection($pacientes);
+            return (new PacienteCollection($pacientes))
+                ->additional([
+                    'sesiones_proximas' => $totalSesionesProximas
+                ]);
         }
     }
 

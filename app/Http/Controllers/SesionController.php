@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sesion;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SesionController extends Controller
@@ -11,30 +13,22 @@ class SesionController extends Controller
      */
     public function index(Request $request)
     {
+        $week = $request->query('week'); 
         $user = auth()->user();
         $psicologo = $user->psicologo;
+        $psicologoId = $psicologo->id;
 
-        if (
-            $request->query('role') === 'psicologo' &&
-            $request->query('consulta') === 'ultimos'
-        ) {
-            $pacientes = $psicologo->pacientes()
-                ->with([
-                    'sesiones' => function ($q) {
-                        $q->latest('fecha')->limit(1);
-                    }
-                ])
-                ->withCount([
-                    'sesiones as sesiones_proximas' => function ($q) {
-                        $q->where('fecha', '>', now());
-                    }
-                ])
-                ->get();
+        $start = Carbon::parse($week)->startOfWeek(Carbon::MONDAY);
+        $end   = Carbon::parse($week)->endOfWeek(Carbon::FRIDAY);
 
-            return response()->json($pacientes);
-        }
+        $sesiones = Sesion::with(['paciente.user'])
+            ->where('psicologo_id', $psicologoId)
+            ->whereBetween('fecha', [$start->toDateString(), $end->toDateString()])
+            ->orderBy('fecha')
+            ->orderBy('hora')
+            ->get();
 
-        return response()->json([]);
+        return response()->json($sesiones);
     }
 
     /**

@@ -31,7 +31,8 @@ class DatabaseSeeder extends Seeder
             RespuestaPreguntaSeeder::class,
             CategoriaSeeder::class,
             ActividadSeeder::class,
-            SesionSeeder::class
+            SesionSeeder::class,
+            ProgresoActividadSeeder::class,
         ]);
     }
 }

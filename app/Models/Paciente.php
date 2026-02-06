@@ -21,10 +21,24 @@ class Paciente extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function psicologo() { 
+        return $this->belongsTo(Psicologo::class); 
+    }
     
     public function sesiones()
     {
         return $this->hasMany(Sesion::class);
+    }
+
+    public function ultimaSesion()
+    {
+        return $this->hasOne(Sesion::class)->latestOfMany('fecha');
+    }
+
+    public function progresoActividad()
+    {
+        return $this->hasOne(ProgresoActividad::class);
     }
     
 }
