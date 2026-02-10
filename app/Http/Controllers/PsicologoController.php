@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PsicologoCollection;
+use App\Models\Psicologo;
 use Illuminate\Http\Request;
 
 class PsicologoController extends Controller
@@ -9,9 +11,16 @@ class PsicologoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+
+        if(!$request->input('role') === 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $psicologos = Psicologo::with('user')->get();
+
+        return (new PsicologoCollection($psicologos));
     }
 
     /**

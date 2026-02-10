@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('/pacientes', PacienteController::class);
     Route::apiResource('/psicologos', PsicologoController::class);
-    Route::apiResource('/sesiones', SesionController::class);
+    Route::apiResource('/sesiones', SesionController::class)->parameters(['sesiones' => 'sesion']);
     Route::apiResource('/tests', RespuestaTestController::class);
     Route::apiResource('/actividades', ActividadController::class);
     Route::post('/respuestas-test', [RespuestaTestController::class]);

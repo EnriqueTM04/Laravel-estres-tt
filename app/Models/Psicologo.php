@@ -15,6 +15,11 @@ class Psicologo extends Model
         'cedula_profesional',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function pacientes()
     {
         return $this->hasMany(Paciente::class);

@@ -36,7 +36,7 @@ class SesionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
     }
 
     /**
@@ -50,16 +50,47 @@ class SesionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Sesion $sesion)
     {
-        //
+        $request->validate([
+            'hora' => ['required', 'regex:/^\d{2}:\d{2}$/'], // HH:mm
+            'fecha' => ['sometimes', 'date'],
+            'modalidad' => ['sometimes', 'in:online,presencial'],
+            'notas' => ['nullable', 'string'],
+        ]);
+
+        // Normalizar hora a HH:mm:ss
+        $horaNormalizada = Carbon::createFromFormat('H:i', $request->hora)
+            ->format('H:i:s');
+
+        $sesion->update([
+            'hora' => $horaNormalizada,
+            'fecha' => $request->fecha ?? $sesion->fecha,
+            'modalidad' => $request->modalidad ?? $sesion->modalidad,
+            'observaciones' => $request->notas ?? $sesion->observaciones,
+        ]);
+
+        return response()->json([
+            'message' => 'Cita actualizada correctamente',
+            'sesion' => $sesion->fresh(['paciente.user']),
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Sesion $sesion)
     {
-        //
+        if ($sesion->psicologo_id !== auth()->user()->psicologo->id) {
+            return response()->json([
+                'message' => 'No autorizado'
+            ], 403);
+        }
+
+        $sesion->delete();
+
+        return response()->json([
+            'message' => 'Sesión eliminada correctamente'
+        ], 200);
     }
 }
