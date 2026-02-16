@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class ProgresoActividad extends Model
 {
     protected $table = 'progreso_actividad';
+
+    public function actividad() {
+        return $this->belongsTo(Actividad::class);
+    }
 }

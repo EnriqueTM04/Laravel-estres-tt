@@ -17,7 +17,6 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::post('/logout', [AuthController:: class, 'logout']);
-
     Route::apiResource('/pacientes', PacienteController::class);
     Route::apiResource('/psicologos', PsicologoController::class);
     Route::apiResource('/sesiones', SesionController::class)->parameters(['sesiones' => 'sesion']);
