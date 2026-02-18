@@ -42,8 +42,8 @@ class Paciente extends Model
         return $this->hasOne(ProgresoActividad::class);
     }
 
-    public function estresRegistros()
+    public function calificaciones()
     {
-        return $this->hasMany(EstresRegistro::class);
+        return $this->hasMany(Calificacion::class);
     }
 }

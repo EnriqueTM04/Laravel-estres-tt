@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PacienteCollection;
-use App\Http\Resources\EstresRegistroResource;
+use App\Models\Calificacion;
 use App\Models\Paciente;
 use App\Models\Sesion;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class PacienteController extends Controller
@@ -53,11 +52,27 @@ class PacienteController extends Controller
             ], 404);
         }
 
-        $registros = $paciente->estresRegistros()
-            ->orderBy('created_at', 'asc')
-            ->get();
+        $puntos = $paciente->calificaciones()
+            ->orderBy('fecha_realizacion', 'asc')
+            ->get()
+            ->map(function (Calificacion $calificacion) {
+                return [
+                    'score' => (int) round($calificacion->calificacion_general),
+                    'created_at' => optional($calificacion->fecha_realizacion)->toDateString(),
+                ];
+            });
 
-        return EstresRegistroResource::collection($registros);
+        $nivelActual = $paciente->nivel_estres_actual;
+        if ($nivelActual !== null && $nivelActual > 0) {
+            $puntos->push([
+                'score' => (int) round($nivelActual),
+                'created_at' => now()->toIso8601String(),
+            ]);
+        }
+
+        return response()->json([
+            'data' => $puntos,
+        ]);
     }
 
     /**

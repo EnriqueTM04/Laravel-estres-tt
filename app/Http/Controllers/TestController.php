@@ -64,12 +64,6 @@ class TestController extends Controller
         $paciente->nivel_estres_actual = $validated['score'];
         $paciente->save();
 
-        // Registrar histórico de nivel de estrés
-        \App\Models\EstresRegistro::create([
-            'paciente_id' => $paciente->id,
-            'score' => $validated['score'],
-        ]);
-
         return (new \App\Http\Resources\PacienteResource($paciente))
             ->additional([
                 'message' => 'Nivel de estrés actualizado',
