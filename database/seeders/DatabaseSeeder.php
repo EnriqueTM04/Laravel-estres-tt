@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             ActividadSeeder::class,
             SesionSeeder::class,
             ProgresoActividadSeeder::class,
+            EstresRegistroSeeder::class,
         ]);
     }
 }

@@ -16,7 +16,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-    Route::post('/logout', [AuthController:: class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::apiResource('/pacientes', PacienteController::class);
     Route::apiResource('/psicologos', PsicologoController::class);
@@ -29,6 +29,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // PSS/Test endpoints protegidos (requieren autenticación)
     Route::get('/tests/{test}/preguntas', [TestController::class, 'preguntas']);
     Route::post('/tests/{test}/resultado', [TestController::class, 'resultado']);
+
+    // Historial de estrés del paciente autenticado
+    Route::get('/pacientes/me/estres-registros', [PacienteController::class, 'estresRegistros']);
 });
 
 // Autenticacion

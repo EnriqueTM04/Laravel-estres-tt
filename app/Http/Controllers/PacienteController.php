@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PacienteCollection;
+use App\Http\Resources\EstresRegistroResource;
 use App\Models\Paciente;
 use App\Models\Sesion;
 use App\Models\User;
@@ -37,6 +38,26 @@ class PacienteController extends Controller
                     'sesiones_proximas' => $totalSesionesProximas
                 ]);
         }
+    }
+
+    /**
+     * Devuelve el historial de niveles de estrés del paciente autenticado.
+     */
+    public function estresRegistros(Request $request)
+    {
+        $user = $request->user();
+        $paciente = Paciente::where('user_id', $user->id)->first();
+        if (!$paciente) {
+            return response()->json([
+                'message' => 'Paciente no encontrado para el usuario autenticado',
+            ], 404);
+        }
+
+        $registros = $paciente->estresRegistros()
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return EstresRegistroResource::collection($registros);
     }
 
     /**
