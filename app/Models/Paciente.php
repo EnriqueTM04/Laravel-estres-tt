@@ -22,10 +22,11 @@ class Paciente extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function psicologo() { 
-        return $this->belongsTo(Psicologo::class); 
+    public function psicologo()
+    {
+        return $this->belongsTo(Psicologo::class);
     }
-    
+
     public function sesiones()
     {
         return $this->hasMany(Sesion::class);
@@ -40,5 +41,9 @@ class Paciente extends Model
     {
         return $this->hasOne(ProgresoActividad::class);
     }
-    
+
+    public function calificaciones()
+    {
+        return $this->hasMany(Calificacion::class);
+    }
 }
