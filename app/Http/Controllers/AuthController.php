@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,8 +20,9 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'fecha_nacimiento' => ['required', 'date', 'before:today'],
             'sexo' => ['nullable', 'string', 'in:Femenino,Masculino,Prefiero no decir,F,M,Otro'],
-            'semestre' => ['nullable', 'integer', 'min:1', 'max:20'],
+            'semestre' => ['nullable', 'integer', 'min:1', 'max:8'],
         ]);
 
         if ($validator->fails()) {
@@ -50,9 +52,12 @@ class AuthController extends Controller
             'role' => 'paciente',
         ]);
 
+        $edad = Carbon::parse($data['fecha_nacimiento'])->age;
+
         Paciente::create([
             'user_id' => $user->id,
             'sexo' => $sexo,
+            'edad' => $edad,
             'semestre' => $data['semestre'] ?? null,
         ]);
 
