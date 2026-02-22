@@ -14,11 +14,13 @@ class PsicologoSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::where('role', 'psicologo')->first();
+        $users = User::where('role', 'psicologo')->get();
 
-        Psicologo::create([
-            'user_id' => $user->id,
-            'cedula_profesional' => 'PSI-123456',
-        ]);
+        foreach ($users as $index => $user) {
+            Psicologo::firstOrCreate(
+                ['user_id' => $user->id],
+                ['cedula_profesional' => 'PSI-' . str_pad((string) ($index + 1), 6, '0', STR_PAD_LEFT)]
+            );
+        }
     }
 }
