@@ -18,11 +18,19 @@ class UserSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        User::create([
-            'name' => 'Dr. Ana López',
-            'email' => 'psicologa@correo.com',
-            'password' => Hash::make('12345678'),
-            'role' => 'psicologo',
+        User::insert([
+            [
+                'name' => 'Dr. Ana López',
+                'email' => 'psicologa@correo.com',
+                'password' => Hash::make('12345678'),
+                'role' => 'psicologo',
+            ],
+            [
+                'name' => 'Dr. Luis Peredo',
+                'email' => 'psicologo@correo.com',
+                'password' => Hash::make('12345678'),
+                'role' => 'psicologo',
+            ],
         ]);
 
         // Pacientes
