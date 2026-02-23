@@ -62,7 +62,7 @@ class PacienteController extends Controller
             // 1. Obtener información básica del paciente y su usuario
             $paciente = Paciente::with('user')->findOrFail($id);
 
-            // 2. Datos para el Gráfico (CORREGIDO)
+            // 2. Datos para el Gráfico
             $registros = DB::table('calificaciones')
                 ->where('paciente_id', $id)
                 ->orderBy('fecha_realizacion', 'desc') 
@@ -110,6 +110,8 @@ class PacienteController extends Controller
                     'nombre' => $paciente->user->name,
                     'email' => $paciente->user->email,
                     'nivel_estres_actual' => $paciente->nivel_estres_actual,
+                    'sexo' => $paciente->sexo,
+                    'edad' => $paciente->edad,
                 ],
                 'grafico_estres' => [
                     'labels' => $labels,

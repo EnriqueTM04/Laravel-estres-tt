@@ -35,9 +35,6 @@ class ProgresoActividadSeeder extends Seeder
                     'paciente_id' => $paciente->id,
                     'actividad_id' => $actividad->id,
                     'fecha' => Carbon::now()->subDays(rand(1, 14)),
-                    'calificacion_paciente' => $estado === 'completado'
-                        ? rand(6, 10)
-                        : 0,
                     'progreso_porcentaje' => $progreso,
                     'comentarios' => $estado === 'completado'
                         ? 'Actividad completada con buen desempeño'

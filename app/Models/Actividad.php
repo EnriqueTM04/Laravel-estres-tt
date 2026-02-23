@@ -13,7 +13,6 @@ class Actividad extends Model
         'descripcion',
         'tipo',
         'tiempo_estimado_min',
-        'calificacion',
         'categoria_id',
     ];
 

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('paciente_id')->constrained('pacientes')->cascadeOnDelete();
             $table->foreignId('actividad_id')->constrained('actividades')->cascadeOnDelete();
             $table->date('fecha');
-            $table->float('calificacion_paciente');
             $table->float('progreso_porcentaje');
             $table->text('comentarios')->nullable();
             $table->enum('estado', ['pendiente', 'en_progreso', 'completado']);

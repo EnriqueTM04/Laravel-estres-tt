@@ -23,7 +23,6 @@ class ActividadSeeder extends Seeder
                 'descripcion' => 'Ejercicio de respiración guiada',
                 'tipo' => 'respiracion',
                 'tiempo_estimado_min' => 10,
-                'calificacion' => 8,
                 'categoria_id' => $alto->id,
             ],
             [
@@ -31,7 +30,6 @@ class ActividadSeeder extends Seeder
                 'descripcion' => 'Meditación para reducir ansiedad',
                 'tipo' => 'meditacion',
                 'tiempo_estimado_min' => 15,
-                'calificacion' => 9,
                 'categoria_id' => $alto->id,
             ],
             [
@@ -39,7 +37,6 @@ class ActividadSeeder extends Seeder
                 'descripcion' => 'Actividad cognitiva para manejo del tiempo',
                 'tipo' => 'ejercicio',
                 'tiempo_estimado_min' => 20,
-                'calificacion' => 6,
                 'categoria_id' => $moderado->id,
             ],
         ]);

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->text('descripcion')->nullable();
             $table->enum('tipo', ['respiracion', 'meditacion', 'ejercicio', 'otro']);
             $table->integer('tiempo_estimado_min');
-            $table->float('calificacion');
             $table->foreignId('categoria_id')->constrained('categorias')->cascadeOnDelete();
             $table->timestamps();
         });

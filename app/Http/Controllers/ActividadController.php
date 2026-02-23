@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Actividad;
+use App\Models\ProgresoActividad;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class ActividadController extends Controller
 {
@@ -19,15 +22,41 @@ class ActividadController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if($request->input('role') !== 'psicologo') {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $actividad = new Actividad();
+        $actividad->nombre = $request->input('nombre');
+        $actividad->descripcion = $request->input('descripcion');
+        $actividad->tipo = $request->input('categoria');
+        $actividad->tiempo_estimado_min = $request->input('duracion');
+        $actividad->categoria_id = '1';
+        $actividad->save();
+
+        $progresoActividad = new ProgresoActividad();
+        $progresoActividad->actividad_id = $actividad->id;
+        $progresoActividad->paciente_id = $request->input('paciente_id');
+        $progresoActividad->fecha = Carbon::now()->format('Y-m-d');
+        $progresoActividad->progreso_porcentaje = 0;
+        $progresoActividad->estado = 'en_progreso';
+        $progresoActividad->save();
+
+        return response()->json(['message' => 'Actividad creada exitosamente', 'id' => $actividad->id], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
-        //
+        if($request->input('role') !== 'psicologo') {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $actividadProgreso = ProgresoActividad::findorFail($id);
+        $actividad = Actividad::findorFail($actividadProgreso->actividad_id);
+        return response()->json($actividad);
     }
 
     /**
@@ -35,7 +64,19 @@ class ActividadController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        if($request->input('role') !== 'psicologo') {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+            $actividadProgreso = ProgresoActividad::findorFail($id);
+            $actividad = Actividad::findorFail($actividadProgreso->actividad_id);
+            $actividad->nombre = $request->input('nombre');
+            $actividad->descripcion = $request->input('descripcion');
+            $actividad->tipo = $request->input('categoria');
+            $actividad->tiempo_estimado_min = $request->input('duracion');
+            $actividad->save();
+    
+            return response()->json(['message' => 'Actividad actualizada exitosamente']);
     }
 
     /**
@@ -43,6 +84,15 @@ class ActividadController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+
+        if(request()->input('role') !== 'psicologo') {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $actividadProgreso = ProgresoActividad::findorFail($id);
+        $actividad = Actividad::findorFail($actividadProgreso->actividad_id);
+        $actividadProgreso->delete();
+        $actividad->delete();
+        return response()->json(['message' => 'Actividad eliminada exitosamente']);
     }
 }
