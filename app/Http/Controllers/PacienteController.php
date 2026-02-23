@@ -6,7 +6,6 @@ use App\Http\Resources\PacienteCollection;
 use App\Models\Paciente;
 use App\Models\ProgresoActividad;
 use App\Models\Sesion;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -34,10 +33,15 @@ class PacienteController extends Controller
                     'progresoActividad',
                 ])
                 ->get();
+            
+            $pacientesSinAsignar = Paciente::whereNull('psicologo_id')
+                ->with('user')
+                ->get();
 
             return (new PacienteCollection($pacientes))
                 ->additional([
-                    'sesiones_proximas' => $totalSesionesProximas
+                    'sesiones_proximas' => $totalSesionesProximas,
+                    'pacientes_sin_asignar' => $pacientesSinAsignar
                 ]);
         }
     }
@@ -152,7 +156,13 @@ class PacienteController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        if ($request->input('role') === 'psicologo') {
+            $paciente = Paciente::findOrFail($id);
+            $paciente->psicologo_id = auth()->user()->psicologo->id;
+            $paciente->save();
+
+            return response()->json(['message' => 'Paciente asignado correctamente']);
+        }
     }
 
     /**

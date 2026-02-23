@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PsicologoCollection;
+use App\Models\Paciente;
+use App\Models\ProgresoActividad;
 use App\Models\Psicologo;
+use App\Models\Sesion;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PsicologoController extends Controller
@@ -123,5 +127,82 @@ class PsicologoController extends Controller
         $psicologo->delete();
 
         return response()->json(['message' => 'Psicólogo eliminado exitosamente']);
+    }
+
+    public function dashboard(Request $request)
+    {
+        $user = $request->user();
+        // Asegurarse de que el usuario es un psicólogo
+        if ($user->role !== 'psicologo' || !$user->psicologo) {
+            return response()->json(['message' => 'No autorizado'], 403);
+        }
+
+        $psicologoId = $user->psicologo->id;
+        $now = Carbon::now();
+        
+        $totalPacientes = Paciente::where('psicologo_id', $psicologoId)->count();
+        $pacientesNuevosMes = Paciente::where('psicologo_id', $psicologoId)
+            ->whereMonth('created_at', $now->month)
+            ->whereYear('created_at', $now->year)
+            ->count();
+
+        // 2. Sesiones 
+        $sesionesMes = Sesion::where('psicologo_id', $psicologoId)
+            ->whereMonth('fecha', $now->month)
+            ->whereYear('fecha', $now->year)
+            ->count();
+        
+        $mesPasado = $now->copy()->subMonth();
+        $sesionesMesPasado = Sesion::where('psicologo_id', $psicologoId)
+            ->whereMonth('fecha', $mesPasado->month)
+            ->whereYear('fecha', $mesPasado->year)
+            ->count();
+
+        // 3. Progreso de Actividades (Haciendo join con pacientes del psicólogo)
+        $pacientesIds = Paciente::where('psicologo_id', $psicologoId)->pluck('id');
+        
+        // estado tiene 'completada' y 'pendiente'
+        $actividadesCompletadas = ProgresoActividad::whereIn('paciente_id', $pacientesIds)
+            ->where('estado', 'completado')
+            ->count();
+            
+        $actividadesPendientes = ProgresoActividad::whereIn('paciente_id', $pacientesIds)
+            ->where('estado', 'en_progreso')
+            ->count();
+
+        $totalActividades = $actividadesCompletadas + $actividadesPendientes;
+        $porcentajeCompletadas = $totalActividades > 0 ? round(($actividadesCompletadas / $totalActividades) * 100) : 0;
+
+        // 4. Niveles de Estrés 
+        $estresBajo = Paciente::where('psicologo_id', $psicologoId)->where('nivel_estres_actual', '<=', 19)->count();
+        $estresMedio = Paciente::where('psicologo_id', $psicologoId)->whereBetween('nivel_estres_actual', [20, 25])->count();
+        $estresAlto = Paciente::where('psicologo_id', $psicologoId)->where('nivel_estres_actual', '>=', 26)->count();
+
+        // Alertas Críticas 
+        $alertasCriticas = $estresAlto;
+
+        return response()->json([
+            'pacientes' => [
+                'total' => $totalPacientes,
+                'nuevos_mes' => $pacientesNuevosMes
+            ],
+            'sesiones' => [
+                'actual' => $sesionesMes,
+                'mes_pasado' => $sesionesMesPasado
+            ],
+            'actividades' => [
+                'completadas' => $actividadesCompletadas,
+                'pendientes' => $actividadesPendientes,
+                'porcentaje' => $porcentajeCompletadas,
+                'tendencia' => 5 // Aquí puedes calcular la tendencia real contra el mes pasado
+            ],
+            'estres' => [
+                'bajo' => $estresBajo,
+                'medio' => $estresMedio,
+                'alto' => $estresAlto,
+                'total' => $totalPacientes > 0 ? $totalPacientes : 1 // Para evitar división por 0 en el frontend
+            ],
+            'alertas_criticas' => $alertasCriticas
+        ]);
     }
 }
