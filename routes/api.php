@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/psicologos', PsicologoController::class);
     Route::get('/dashboard', [PsicologoController::class, 'dashboard']);
     Route::apiResource('/sesiones', SesionController::class)->parameters(['sesiones' => 'sesion']);
+    Route::get('/sesiones-ocupadas', [SesionController::class, 'bookedTimes']);
     Route::apiResource('/tests', RespuestaTestController::class);
     Route::apiResource('/actividades', ActividadController::class);
     Route::post('/respuestas-test', [RespuestaTestController::class]);
@@ -29,8 +30,14 @@ Route::middleware('auth:sanctum')->group(function () {
     // PSS/Test endpoints protegidos (requieren autenticación)
     Route::get('/tests/{test}/preguntas', [TestController::class, 'preguntas']);
     Route::post('/tests/{test}/resultado', [TestController::class, 'resultado']);
+
+    // Historial de estrés del paciente autenticado
+    Route::get('/pacientes/me/estres-registros', [PacienteController::class, 'estresRegistros']);
 });
 
 // Autenticacion
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+
+// Public endpoint for psychologists list (mobile app)
+Route::get('/psicologos-public', [PsicologoController::class, 'publicIndex']);

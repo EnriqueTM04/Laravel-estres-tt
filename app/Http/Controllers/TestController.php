@@ -64,9 +64,9 @@ class TestController extends Controller
         $paciente->nivel_estres_actual = $validated['score'];
         $paciente->save();
 
-        return response()->json([
-            'message' => 'Nivel de estrés actualizado',
-            'paciente' => $paciente,
-        ]);
+        return (new \App\Http\Resources\PacienteResource($paciente))
+            ->additional([
+                'message' => 'Nivel de estrés actualizado',
+            ]);
     }
 }
