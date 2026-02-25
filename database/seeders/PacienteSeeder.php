@@ -24,7 +24,7 @@ class PacienteSeeder extends Seeder
                 'psicologo_id' => $psicologo->id,
                 'edad' => rand(18, 30),
                 'sexo' => rand(0,1) ? 'M' : 'F',
-                'nivel_estres_actual' => rand(3, 9),
+                'nivel_estres_actual' => rand(3, 50),
                 'semestre' => rand(1, 9),
             ]);
         }

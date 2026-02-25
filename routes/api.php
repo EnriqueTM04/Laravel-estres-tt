@@ -16,10 +16,10 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
 
-    Route::post('/logout', [AuthController::class, 'logout']);
-
+    Route::post('/logout', [AuthController:: class, 'logout']);
     Route::apiResource('/pacientes', PacienteController::class);
     Route::apiResource('/psicologos', PsicologoController::class);
+    Route::get('/dashboard', [PsicologoController::class, 'dashboard']);
     Route::apiResource('/sesiones', SesionController::class)->parameters(['sesiones' => 'sesion']);
     Route::get('/sesiones-ocupadas', [SesionController::class, 'bookedTimes']);
     Route::apiResource('/tests', RespuestaTestController::class);

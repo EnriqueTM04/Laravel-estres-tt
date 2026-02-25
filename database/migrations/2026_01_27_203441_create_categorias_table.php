@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('categorias', function (Blueprint $table) {
             $table->id();
             $table->string('nombre_categoria');
-            $table->float('calificacion_minima');
-            $table->float('calificacion_maxima');
             $table->timestamps();
         });
     }

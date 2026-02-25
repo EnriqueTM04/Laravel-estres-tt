@@ -121,7 +121,7 @@ class SesionController extends Controller
         $request->validate([
             'hora' => ['required', 'regex:/^\d{2}:\d{2}$/'], // HH:mm
             'fecha' => ['sometimes', 'date'],
-            'modalidad' => ['sometimes', 'in:online,presencial'],
+            'modalidad' => ['in:virtual,presencial'],
             'notas' => ['nullable', 'string'],
         ]);
 
@@ -132,7 +132,7 @@ class SesionController extends Controller
         $sesion->update([
             'hora' => $horaNormalizada,
             'fecha' => $request->fecha ?? $sesion->fecha,
-            'modalidad' => $request->modalidad ?? $sesion->modalidad,
+            'tipo_sesion' => $request->modalidad,
             'observaciones' => $request->notas ?? $sesion->observaciones,
         ]);
 

@@ -16,18 +16,12 @@ class CategoriaSeeder extends Seeder
         Categoria::insert([
             [
                 'nombre_categoria' => 'Estrés Bajo',
-                'calificacion_minima' => 0,
-                'calificacion_maxima' => 19,
             ],
             [
                 'nombre_categoria' => 'Estrés Moderado',
-                'calificacion_minima' => 20,
-                'calificacion_maxima' => 25,
             ],
             [
                 'nombre_categoria' => 'Estrés Alto',
-                'calificacion_minima' => 26,
-                'calificacion_maxima' => 56,
             ],
         ]);
     }

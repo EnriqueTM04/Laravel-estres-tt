@@ -7,4 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class ProgresoActividad extends Model
 {
     protected $table = 'progreso_actividad';
+
+    protected $fillable = [
+        'actividad_id',
+        'paciente_id',
+        'fecha',
+        'progreso_porcentaje',
+        'estado',
+    ];
+
+    public function actividad() {
+        return $this->belongsTo(Actividad::class);
+    }
 }

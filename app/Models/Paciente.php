@@ -37,6 +37,10 @@ class Paciente extends Model
         return $this->hasOne(Sesion::class)->latestOfMany('fecha');
     }
 
+    public function calificaciones() {
+        return $this->hasMany(Calificacion::class);
+    }
+
     public function progresoActividad()
     {
         return $this->hasOne(ProgresoActividad::class);

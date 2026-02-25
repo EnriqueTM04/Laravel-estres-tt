@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
             ActividadSeeder::class,
             SesionSeeder::class,
             ProgresoActividadSeeder::class,
+            CalificacionSeeder::class,
+            HistorialCalificacionSeeder::class,
         ]);
     }
 }
