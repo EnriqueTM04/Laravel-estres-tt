@@ -19,4 +19,9 @@ class ProgresoActividad extends Model
     public function actividad() {
         return $this->belongsTo(Actividad::class);
     }
+
+    public function paciente()
+    {
+        return $this->belongsTo(Paciente::class, 'paciente_id');
+    }
 }

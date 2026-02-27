@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/tests', RespuestaTestController::class);
     Route::apiResource('/actividades', ActividadController::class);
     Route::post('/respuestas-test', [RespuestaTestController::class]);
-    Route::post('/progreso-actividad', [ProgresoActividadController::class]);
+    Route::apiResource('/progreso-actividad', ProgresoActividadController::class);
 
     // PSS/Test endpoints protegidos (requieren autenticación)
     Route::get('/tests/{test}/preguntas', [TestController::class, 'preguntas']);

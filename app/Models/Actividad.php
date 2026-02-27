@@ -20,4 +20,9 @@ class Actividad extends Model
     {
         return $this->belongsTo(Categoria::class);
     }
+
+    public function progresos()
+    {
+        return $this->hasMany(ProgresoActividad::class, 'actividad_id');
+    }
 }

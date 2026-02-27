@@ -46,4 +46,9 @@ class Paciente extends Model
     {
         return $this->hasMany(Calificacion::class);
     }
+
+    public function progresosActividades()
+    {
+        return $this->hasMany(ProgresoActividad::class, 'paciente_id');
+    }
 }
